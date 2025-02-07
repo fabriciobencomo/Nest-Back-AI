@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import OpenAI from 'openai';
 
 interface Options {
@@ -31,10 +32,13 @@ export const orthographyCheckUseCase = async(openai:OpenAI, options: Options) =>
     max_tokens: 150
     });
 
-  return completion.choices[0].message;
+  const content = completion.choices[0].message.content;
+  if (content === null) {
+    throw new Error("Completion content is null");
+  }
+  const jsonResp = JSON.parse(content);
 
   return {
-    prompt,
-    apiKey: process.env.OPEN_AI_KEY
+    jsonResp
   }
 }

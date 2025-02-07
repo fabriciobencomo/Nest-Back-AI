@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { orthographyCheckUseCase } from './use-cases';
-import { OrthographyDto } from './dtos/orthography.dto';
 import OpenAI from 'openai';
+import { orthographyCheckUseCase, prosConsDicusserStreamUseCase, prosConsDicusserUseCase } from './use-cases';
+import { OrthographyDto, ProsConsDiscusserDto } from './dtos';
 
 @Injectable()
 export class GptService {
@@ -14,5 +14,13 @@ export class GptService {
 
   async ortographyCheck(orthographyDto: OrthographyDto) {
     return await orthographyCheckUseCase(this.openai, {prompt: orthographyDto.prompt});
+  }
+
+  async prosConsDiscusser(prosConsDiscusserDto: ProsConsDiscusserDto) {
+    return await prosConsDicusserUseCase(this.openai, {prompt: prosConsDiscusserDto.prompt});
+  }
+
+  async prosConsDiscusserStream(prosConsDiscusserDto: ProsConsDiscusserDto) {
+    return await prosConsDicusserStreamUseCase(this.openai, {prompt: prosConsDiscusserDto.prompt});
   }
 }
