@@ -29,7 +29,10 @@ export const orthographyCheckUseCase = async(openai:OpenAI, options: Options) =>
         },
     ],
     temperature: 0.3,
-    max_tokens: 150
+    max_tokens: 150,
+    response_format: {
+      type: 'json_object'
+    }
     });
 
   const content = completion.choices[0].message.content;
@@ -38,7 +41,8 @@ export const orthographyCheckUseCase = async(openai:OpenAI, options: Options) =>
   }
   const jsonResp = JSON.parse(content);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
-    jsonResp
+    ...jsonResp
   }
 }
