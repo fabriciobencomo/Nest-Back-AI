@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import OpenAI from 'openai';
 import { orthographyCheckUseCase, prosConsDicusserStreamUseCase, prosConsDicusserUseCase, textToAudioUseCase } from './use-cases';
-import { OrthographyDto, ProsConsDiscusserDto, TranslateDto } from './dtos';
+import { OrthographyDto, ProsConsDiscusserDto, TranslateDto, AudioToTextDto } from './dtos';
 import { translateUseCase } from './use-cases/translate.use-case';
 import { TextToAudioDto } from './dtos/text-to-audio.dto';
 import * as path from 'path';
 import * as fs from 'fs';
+import { audioToTextUseCase } from './use-cases/audio-to-text.use-case';
 
 @Injectable()
 export class GptService {
@@ -27,6 +28,7 @@ export class GptService {
     return await textToAudioUseCase(this.openai, {prompt: textToAudioDtoDto.prompt, voice: textToAudioDtoDto.voice });
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async textToAudioGetter(fileId: string) {
     const filePath = path.resolve(
       __dirname,
@@ -41,6 +43,11 @@ export class GptService {
     return filePath;
   }
 
+
+  async audioToText(audioFile: Express.Multer.File, audioToTextDto: AudioToTextDto){
+    const {prompt} = audioToTextDto
+    return await audioToTextUseCase(this.openai, {audioFile, prompt})
+  }
 
   async prosConsDiscusser(prosConsDiscusserDto: ProsConsDiscusserDto) {
     return await prosConsDicusserUseCase(this.openai, {prompt: prosConsDiscusserDto.prompt});
