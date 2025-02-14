@@ -2,7 +2,7 @@ import { Body, Controller, FileTypeValidator, Get, HttpStatus, MaxFileSizeValida
 import {diskStorage} from 'multer'
 import {Response} from 'express'
 import { GptService } from './gpt.service';
-import { AudioToTextDto, OrthographyDto, TextToAudioDto, TranslateDto } from './dtos';
+import { AudioToTextDto, ImageGenerationDto, OrthographyDto, TextToAudioDto, TranslateDto } from './dtos';
 import { ProsConsDiscusserDto } from './dtos/pros-cons-discusser.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -97,6 +97,13 @@ export class GptController {
   ){
 
     return this.gptService.audioToText(file, audioToTextDto)
+  }
+
+  @Post('image-generation')
+  async imageGeneration(
+    @Body() imageGenerationDto: ImageGenerationDto
+  ){
+    return await this.gptService.imageGeneration(imageGenerationDto)
   }
 
 }

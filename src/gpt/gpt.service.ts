@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import OpenAI from 'openai';
-import { orthographyCheckUseCase, prosConsDicusserStreamUseCase, prosConsDicusserUseCase, textToAudioUseCase } from './use-cases';
+import { imageGenerationUseCase, orthographyCheckUseCase, prosConsDicusserStreamUseCase, prosConsDicusserUseCase, textToAudioUseCase } from './use-cases';
 import { OrthographyDto, ProsConsDiscusserDto, TranslateDto, AudioToTextDto } from './dtos';
 import { translateUseCase } from './use-cases/translate.use-case';
 import { TextToAudioDto } from './dtos/text-to-audio.dto';
 import * as path from 'path';
 import * as fs from 'fs';
 import { audioToTextUseCase } from './use-cases/audio-to-text.use-case';
+import { ImageGenerationDto } from './dtos/image-generation.dto';
 
 @Injectable()
 export class GptService {
@@ -55,5 +56,9 @@ export class GptService {
 
   async prosConsDiscusserStream(prosConsDiscusserDto: ProsConsDiscusserDto) {
     return await prosConsDicusserStreamUseCase(this.openai, {prompt: prosConsDiscusserDto.prompt});
+  }
+
+  async imageGeneration(imageGenerationDto: ImageGenerationDto) {
+    return await imageGenerationUseCase(this.openai, {...imageGenerationDto});
   }
 }
