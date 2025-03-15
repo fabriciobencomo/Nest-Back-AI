@@ -5,6 +5,7 @@ import { GptService } from './gpt.service';
 import { AudioToTextDto, ImageGenerationDto, OrthographyDto, TextToAudioDto, TranslateDto } from './dtos';
 import { ProsConsDiscusserDto } from './dtos/pros-cons-discusser.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { assistantFabricioDto } from './dtos/assistant-fabricio.dto';
 
 @Controller('gpt')
 export class GptController {
@@ -30,6 +31,22 @@ export class GptController {
     @Res() res: Response
   ){
     const stream = await this.gptService.prosConsDiscusserStream(prosConsDiscusserDto)
+    res.setHeader('Content-Type', 'application/json');
+    res.status(HttpStatus.OK)
+    for await(const chunk of stream) {
+      const piece = chunk.choices[0].delta.content || ''
+      res.write(piece)
+    }
+    
+    res.end()
+  }
+
+  @Post('assistant-fabricio-chat')
+  async assistantFabricioStream (
+    @Body() assistantFabricioDto: assistantFabricioDto,
+    @Res() res: Response
+  ){
+    const stream = await this.gptService.assistantFabricioStream(assistantFabricioDto)
     res.setHeader('Content-Type', 'application/json');
     res.status(HttpStatus.OK)
     for await(const chunk of stream) {
