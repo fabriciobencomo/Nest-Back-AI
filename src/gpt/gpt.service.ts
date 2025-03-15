@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import { audioToTextUseCase } from './use-cases/audio-to-text.use-case';
 import { ImageGenerationDto } from './dtos/image-generation.dto';
 import { assistantFabricioDto } from './dtos/assistant-fabricio.dto';
+import { assistantFabricioUseCase } from './use-cases/assistant-fabricio-stream.use-case';
 
 @Injectable()
 export class GptService {
@@ -60,7 +61,7 @@ export class GptService {
   }
 
   async assistantFabricioStream(assistantFabricioDto: assistantFabricioDto) {
-    return await prosConsDicusserStreamUseCase(this.openai, {prompt: assistantFabricioDto.prompt});
+    return await assistantFabricioUseCase(this.openai, {prompt: assistantFabricioDto.prompt});
   }
 
   async imageGeneration(imageGenerationDto: ImageGenerationDto) {
